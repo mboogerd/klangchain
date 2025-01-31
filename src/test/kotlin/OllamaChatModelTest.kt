@@ -13,9 +13,8 @@ import dev.langchain4j.model.ollama.OllamaChatModel
 import dev.langchain4j.service.AiServices
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import utils.AbstractOllamaInfrastructure
 
-internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
+class OllamaChatModelTest {
 
     data class Person(val name: String, val age: Int)
 
@@ -23,6 +22,8 @@ internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
         fun extractPersonFrom(text: String?): Person
     }
 
+    val ollamaBaseUrl = "http://localhost:11434"
+    val MODEL_NAME: String = "deepseek-r1:14b"
 
     /**
      * If you have Ollama running locally,
@@ -34,7 +35,7 @@ internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
     @Test
     fun simple_example() {
         val chatModel: ChatLanguageModel = OllamaChatModel.builder()
-            .baseUrl(ollamaBaseUrl(ollama))
+            .baseUrl(ollamaBaseUrl)
             .modelName(MODEL_NAME)
             .logRequests(true)
             .build()
@@ -44,12 +45,13 @@ internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
 
         assertThat(answer).isNotBlank()
     }
+
     @Test
     fun json_schema_with_AI_Service_example() {
 
 
         val chatModel: ChatLanguageModel = OllamaChatModel.builder()
-            .baseUrl(ollamaBaseUrl(ollama))
+            .baseUrl(ollamaBaseUrl)
             .modelName(MODEL_NAME)
             .temperature(0.0)
             .supportedCapabilities(RESPONSE_FORMAT_JSON_SCHEMA)
@@ -67,7 +69,7 @@ internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
     @Test
     fun json_schema_with_low_level_chat_api_example() {
         val chatModel: ChatLanguageModel = OllamaChatModel.builder()
-            .baseUrl(ollamaBaseUrl(ollama))
+            .baseUrl(ollamaBaseUrl)
             .modelName(MODEL_NAME)
             .temperature(0.0)
             .logRequests(true)
@@ -108,7 +110,7 @@ internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
     @Test
     fun json_schema_with_low_level_model_builder_example() {
         val chatModel: ChatLanguageModel = OllamaChatModel.builder()
-            .baseUrl(ollamaBaseUrl(ollama))
+            .baseUrl(ollamaBaseUrl)
             .modelName(MODEL_NAME)
             .temperature(0.0)
             .responseFormat(
@@ -138,7 +140,7 @@ internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
     @Test
     fun json_mode_with_low_level_model_builder_example() {
         val chatModel: ChatLanguageModel = OllamaChatModel.builder()
-            .baseUrl(ollamaBaseUrl(ollama))
+            .baseUrl(ollamaBaseUrl)
             .modelName(MODEL_NAME)
             .temperature(0.0)
             .responseFormat(ResponseFormat.JSON)
@@ -148,7 +150,7 @@ internal class OllamaChatModelTest : AbstractOllamaInfrastructure() {
         val json: String = chatModel.chat("Give me a JSON object with 2 fields: name and age of a John Doe, 42")
         println(json)
 
-        assertThat(toMap(json)).isEqualTo(java.util.Map.of("name", "John Doe", "age", 42))
+        assertThat(toMap(json)).isEqualTo(mapOf("name" to "John Doe", "age" to 42))
     }
 
     companion object {

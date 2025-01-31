@@ -171,6 +171,32 @@ class OllamaChatModelTest {
         )
     }
 
+    @Test
+    fun downsides_and_dangers_of_AI_and_LLM() {
+        val chatModel: ChatLanguageModel = OllamaChatModel.builder()
+            .baseUrl(ollamaBaseUrl)
+            .modelName(MODEL_NAME)
+            .temperature(0.0)
+            .responseFormat(ResponseFormat.TEXT)
+            .build()
+
+        val answer: String = chatModel.chat("What are the downsides and dangers of AI and LLM in particular?")
+        println(answer)
+
+        listOf(
+            "Privacy Concerns",
+            "Bias and Discrimination",
+            "Job Displacement",
+            "Data Privacy Laws",
+            "Misinformation and Biased Content",
+            "Job Creation Disparities",
+            "Transparency Issues",
+            "Environmental Impact",
+            "Human Oversight",
+            "Ethical Guidelines and Transparency"
+        ).forEach { expected -> assertThat(answer.contains(expected)) }
+    }
+
     companion object {
         private fun toMap(json: String): Map<String, Any> {
             try {

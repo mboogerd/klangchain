@@ -24,6 +24,7 @@ class OllamaChatModelTest {
 
     val ollamaBaseUrl = "http://localhost:11434"
     val MODEL_NAME: String = "deepseek-r1:14b"
+//    val MODEL_NAME: String = "deepseek-r1:1.5b"
 
     /**
      * If you have Ollama running locally,
@@ -151,6 +152,23 @@ class OllamaChatModelTest {
         println(json)
 
         assertThat(toMap(json)).isEqualTo(mapOf("name" to "John Doe", "age" to 42))
+    }
+
+    @Test
+    fun recursion_pros_and_cons() {
+        val chatModel: ChatLanguageModel = OllamaChatModel.builder()
+            .baseUrl(ollamaBaseUrl)
+            .modelName(MODEL_NAME)
+            .temperature(0.0)
+            .responseFormat(ResponseFormat.TEXT)
+            .build()
+
+        val answer: String = chatModel.chat("Provide pros and cons of a recursive algorithm")
+        println(answer)
+
+        assertThat(answer.lines().last() ==
+                "Recursion offers simplicity and natural problem-solving but faces challenges with potential for stack overflows, increased overhead, and complexity in managing multiple states or data structures. Choosing the right approach depends on the specific problem and available resources."
+        )
     }
 
     companion object {
